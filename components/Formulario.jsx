@@ -11,17 +11,23 @@ export const Formulario = () => {
 
     useEffect(() => {
         const consultarAPI = async () => {
-            const URL = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD`
+            const URL = "https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD"
             const resultado = await axios.get(URL)
             setCriptomonedas(resultado.data.Data)
+            console.log(resultado.data.Data)
+
         }
 
         consultarAPI()
     }, [])
 
 
-    const obtenerMoneda = () => {
+    const obtenerMoneda = moneda => {
         setMoneda(moneda)
+    }
+
+    const obtenerCriptoMoneda = cripto => {
+        setCriptomoneda(cripto)
     }
 
     return (
@@ -31,7 +37,7 @@ export const Formulario = () => {
             </Text>
 
             <Picker
-                onValueChange={(moneda => obtenerMoneda(moneda))}
+                onValueChange={moneda => obtenerMoneda(moneda)}
                 selectedValue={moneda}
             >
                 <Picker.Item label="--Seleccione--" value="" />
@@ -41,9 +47,28 @@ export const Formulario = () => {
                 <Picker.Item label="Libra Esterlina" value="GBP" />
             </Picker>
 
-            <Text style={styles.label}>
-                Criptomonedas
-            </Text>
+
+            <View>
+                <Text style={styles.label}>
+                    Criptomonedas
+                </Text>
+
+                <Picker
+                    selectedValue={criptomoneda}
+                    onValueChange={cripto => obtenerCriptoMoneda(cripto)}
+                >
+                    <Picker.Item label="--Seleccione--" value="" />
+                    {criptomonedas.map(cripto => (
+                        <Picker.Item
+                            key={cripto.CoinInfo.Id}
+                            label={cripto.CoinInfo.FullName}
+                            value={cripto.CoinInfo.Name}
+                        />
+                    ))}
+                </Picker>
+
+            </View>
+
         </View >
     )
 }
@@ -57,3 +82,4 @@ const styles = StyleSheet.create({
 
     }
 })
+
