@@ -8,7 +8,7 @@ export const Cotizacion = ({ resultado }) => {
 
     return (
         <View style={styles.resultado}>
-            <Text style={styles.texto}>
+            <Text style={styles.precio}>
                 <Text style={styles.span}>
                     {resultado.PRICE}
                 </Text>
@@ -41,16 +41,25 @@ export const Cotizacion = ({ resultado }) => {
 
 const styles = StyleSheet.create({
     resultado: {
+        backgroundColor: "blue",
+        padding: 20
 
     },
     texto: {
+        color: "white",
+        fontSize: 20,
+        marginBottom: 20
+
 
     },
     precio: {
+        fontSize: 40,
+        textAlign: "center",
+        paddingBottom: 40
 
     },
     span: {
-
+        color: "red"
     }
 })
 

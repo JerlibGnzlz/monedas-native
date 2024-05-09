@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, ScrollView, ActivityIndicator } from 'react-native';
 import Header from './components/Header';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -11,6 +11,9 @@ export default function App () {
   const [criptomoneda, setCriptomoneda] = useState("")
   const [consultarAPI, setConsultarAPI] = useState(false)
   const [resultado, guardarResultado] = useState({})
+  const [spinner, setSpinner] = useState(false)
+
+
 
   useEffect(() => {
     const cotizarCriptomonedas = async () => {
@@ -18,37 +21,53 @@ export default function App () {
 
         const URL = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`
         const resultado = await axios(URL)
-        guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda])
-        console.log(resultado.data.DISPLAY[criptomoneda][moneda])
 
-        setConsultarAPI(false)
+        setSpinner(true)
+
+        setTimeout(() => {
+          guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda])
+          setConsultarAPI(false)
+          setSpinner(false)
+
+        }, 3000);
       }
     }
+
     cotizarCriptomonedas()
   }, [consultarAPI])
 
+
+
+  const componenteSpinner = spinner ? <ActivityIndicator size='large' color="red" /> : <Cotizacion resultado={resultado} />
   return (
     <>
-      <Header />
+      <ScrollView>
 
-      <Image
-        style={styles.imagen}
-        source={require("./assets/img/cryptomonedas.png")}
-      />
-      <View style={styles.contenido}>
-        <Formulario
-          moneda={moneda}
-          criptomoneda={criptomoneda}
-          setMoneda={setMoneda}
-          setCriptomoneda={setCriptomoneda}
-          setConsultarAPI={setConsultarAPI}
+        <Header />
+
+        <Image
+          style={styles.imagen}
+          source={require("./assets/img/cryptomonedas.png")}
         />
+        <View style={styles.contenido}>
+          <Formulario
+            moneda={moneda}
+            criptomoneda={criptomoneda}
+            setMoneda={setMoneda}
+            setCriptomoneda={setCriptomoneda}
+            setConsultarAPI={setConsultarAPI}
+          />
 
-        <Cotizacion
+        </View>
+
+        {componenteSpinner}
+
+        {/* <Cotizacion
           resultado={resultado}
-        />
-      </View>
+        /> */}
 
+
+      </ScrollView>
     </>
   );
 }
